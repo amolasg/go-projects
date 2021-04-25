@@ -1,0 +1,36 @@
+{
+    "Name": "Amol Shantaram Gaikwad",
+    "Job": "Backend Developer",
+    "Email": "amol.asg@gmail.com",
+    "Website": "gophersgo.blogspot.com",
+    "Location": "Pune, India",
+    "Skills": [
+      "Golang",
+      "React",
+      "PostgresSQL",
+      "Docker"
+    ],
+    "Experience": [
+      {
+        "Role": "Backend Developer",
+        "Company": "Scalent Infotech Pvt.Ltd",
+        "Started": "Jan 2019",
+        "Location": "Pune, India",
+        "Details": [
+          "Backend development",
+          "API Development"
+        ]
+      }
+    ],
+    "Projects": [
+      "Go-Discord Bot"
+    ],
+    "Education": [
+      "Bachelor of Engineering from Pune University"
+    ],
+    "Languages": [
+      "English",
+      "Marathi",
+      "Hindi"
+    ]
+  }
