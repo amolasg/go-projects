@@ -2,24 +2,31 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 
-	"github.com/gorilla/mux"
+	"github.com/amolasg/go-projects/clean-arch-example/controller"
+	router "github.com/amolasg/go-projects/clean-arch-example/http"
+	"github.com/amolasg/go-projects/clean-arch-example/repository"
+	"github.com/amolasg/go-projects/clean-arch-example/service"
+)
+
+var (
+	postRepository repository.PostRepository = repository.NewFirestoreRepository()
+	postService    service.PostService       = service.NewPostService(postRepository)
+	postController controller.PostController = controller.NewPostController(postService)
+	httpRouter     router.Router             = router.NewMuxRouter()
+	//httpRouter     router.Router             = router.NewChiRouter()
 )
 
 func main() {
 
-	router := mux.NewRouter()
-
-	router.HandleFunc("/", func(resp http.ResponseWriter, w *http.Request) {
-		fmt.Fprintln(resp, "Up...")
+	httpRouter.GET("/", func(resp http.ResponseWriter, w *http.Request) {
+		fmt.Fprintln(resp, " UP and Running...")
 	})
 
-	router.HandleFunc("/posts", getPosts).Methods("GET")
-	router.HandleFunc("/posts", addPost).Methods("POST")
+	httpRouter.GET("/posts", postController.GetPosts)
+	httpRouter.POST("/posts", postController.AddPost)
 
-	log.Println("server listining on :8080")
-	log.Fatal(http.ListenAndServe(":8080", router))
+	httpRouter.SERVE(":8080")
 
 }
