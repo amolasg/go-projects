@@ -21,26 +21,30 @@ type Book struct {
 
 // books empty slice will holding book records
 var books []Book
-var db *sql.DB
 
 func init() {
 	gotenv.Load()
 }
 
+func OpenConnection() *sql.DB {
+	psqlInfo := fmt.Sprintf("user=%s "+
+		"password=%s dbname=%s sslmode=disable",
+		os.Getenv("APP_DB_USERNAME"), os.Getenv("APP_DB_PASSWORD"), os.Getenv("APP_DB_NAME"))
+
+	db, err := sql.Open("postgres", psqlInfo)
+	if err != nil {
+		panic(err)
+	}
+
+	err = db.Ping()
+	if err != nil {
+		panic(err)
+	}
+
+	return db
+}
+
 func main() {
-
-	connectionString :=
-		fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable", os.Getenv("APP_DB_USERNAME"), os.Getenv("APP_DB_PASSWORD"), os.Getenv("APP_DB_NAME"))
-
-	var err error
-	db, err := sql.Open("postgres", connectionString)
-	if err != nil {
-		log.Fatal(err)
-	}
-	error := db.Ping()
-	if err != nil {
-		log.Fatal("error in connection", error)
-	}
 
 	router := mux.NewRouter()
 	// api endpoints
@@ -58,6 +62,7 @@ func main() {
 func getBooks(w http.ResponseWriter, r *http.Request) {
 
 }
+
 func getBook(w http.ResponseWriter, r *http.Request) {
 
 }
