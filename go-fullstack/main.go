@@ -1,10 +1,15 @@
 package main
 
 import (
+	"database/sql"
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
+	_ "github.com/lib/pq"
+	"github.com/subosito/gotenv"
 )
 
 type Book struct {
@@ -16,8 +21,26 @@ type Book struct {
 
 // books empty slice will holding book records
 var books []Book
+var db *sql.DB
+
+func init() {
+	gotenv.Load()
+}
 
 func main() {
+
+	connectionString :=
+		fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable", os.Getenv("APP_DB_USERNAME"), os.Getenv("APP_DB_PASSWORD"), os.Getenv("APP_DB_NAME"))
+
+	var err error
+	db, err := sql.Open("postgres", connectionString)
+	if err != nil {
+		log.Fatal(err)
+	}
+	error := db.Ping()
+	if err != nil {
+		log.Fatal("error in connection", error)
+	}
 
 	router := mux.NewRouter()
 	// api endpoints
