@@ -11,10 +11,64 @@ import{
     FETCH_BOOK_SUCCESS
 } from './types';
 
-import { books } from '../data';
+
 import axios from 'axios';
+import {history} from '../index.js';
 
 const url = 'http://localhost:8080/books';
+
+// Create 
+
+export const createBookSuccess = (data) =>{
+    return{
+        type: ADD_BOOK_SUCCESS,
+        payload: data,
+    }
+};
+
+export const createBook = (book) => {
+    const data = {
+        title: book.title,
+        author: book.author,
+        year: book.year,
+    };
+
+    return (dispatch) => {
+        return axios.post(url,data)
+        .then(response =>{
+           const id = response.data;
+
+           axios.get(`${url}/${id}`)
+           .then(response =>{
+               const data = response.data;
+              const normalizedData = {
+                   id: data.ID,
+                   title: data.Title,
+                   author: data.Author,
+                   year: data.Year,
+               };
+
+           dispatch(createBookSuccess(normalizedData));
+           history.push('/');
+
+           }).catch(error =>{
+            console.log(error);
+           });
+        }).catch(error =>{
+            console.log(error);
+        });
+        
+    }
+    
+}
+
+// Edit
+
+
+// Delete
+
+
+// Fetch
 
 export const fetchBooksSuccess = (data) => {
  return {
