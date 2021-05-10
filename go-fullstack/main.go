@@ -7,8 +7,8 @@ import (
 
 	"github.com/amolasg/go-projects/go-fullstack/controllers"
 	"github.com/amolasg/go-projects/go-fullstack/driver"
-	"github.com/rs/cors"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
 	"github.com/subosito/gotenv"
@@ -33,8 +33,6 @@ func main() {
 	router.HandleFunc("/books/{id}", controller.DeleteBook(db)).Methods("DELETE")
 
 	fmt.Println("Server listning on port 8080")
-
-	handler := cors.Default().Handler(router)
-
-	log.Fatal(http.ListenAndServe(":8080", handler))
+	// handle cors
+	log.Fatal(http.ListenAndServe(":8080", handlers.CORS(handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"}), handlers.AllowedMethods([]string{"GET", "POST", "PUT", "HEAD", "OPTIONS"}), handlers.AllowedOrigins([]string{"*"}))(router)))
 }
