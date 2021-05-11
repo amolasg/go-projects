@@ -42,18 +42,16 @@ class App extends Component{
                exact
                component={()=><CreateBook/>}
                />
-         <Route path="/edit/:id"
+         <Route 
+               path="/edit/:id"
                exact
-               component={()=><CreateBook/>}
+               book={this.state.book}
+               component={(props)=> <CreateBook { ...props}/>}
                />              
       </Switch>
     </div>
 </Router>
-
- 
-    )
-    
+  )
   }
 }
-
 export default App;
