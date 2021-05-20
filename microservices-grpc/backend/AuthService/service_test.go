@@ -35,3 +35,28 @@ func Test_authServer_Login(t *testing.T) {
 
 	}
 }
+
+func Test_authServer_UsernameUsed(t *testing.T) {
+	global.ConnectToTestDB()
+	global.DB.Collection("user").InsertOne(context.Background(), global.User{Username: "a"})
+	server := authServer{}
+
+	res, err := server.UsernameUsed(context.Background(), &proto.UsernameUsedRequest{Username: "a"})
+	if err != nil {
+		t.Error("1 an error", err.Error())
+	}
+	if res.GetUsed() {
+		t.Error("1 wrong error")
+	}
+
+	res, err = server.UsernameUsed(context.Background(), &proto.UsernameUsedRequest{Username: "a"})
+
+	if err != nil {
+		t.Error("2 an error", err.Error())
+	}
+
+	if !res.GetUsed() {
+		t.Error("2 wrong error")
+
+	}
+}
